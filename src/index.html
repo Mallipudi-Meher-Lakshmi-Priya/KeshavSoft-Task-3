@@ -1,4 +1,4 @@
-{% set title = 'Dashboard' %}
+{% set title = 'KeshavSoft Admin' %}
 {% set filename = 'index.html' %}
 
 {% extends 'src/layouts/master.html' %}
@@ -8,6 +8,44 @@
 {% endblock %}
 
 {% block content %}
+<div class="page-heading">
+    <h3>Assignment Task Overview</h3>
+</div>
+<div class="page-content">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Current Progress</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Task Name</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Project Installation & Setup</td>
+                        <td><span class="badge bg-success">Completed</span></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Custom Branding (KeshavSoft)</td>
+                        <td><span class="badge bg-success">Completed</span></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Menu Optimization</td>
+                        <td><span class="badge bg-info">Completed</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 <div class="page-heading">
     <h3>Profile Statistics</h3>
 </div> 
@@ -262,8 +300,8 @@
                             <img src="assets/static/images/faces/1.jpg" alt="Face 1">
                         </div>
                         <div class="ms-3 name">
-                            <h5 class="font-bold">John Duck</h5>
-                            <h6 class="text-muted mb-0">@johnducky</h6>
+                            <h5 class="font-bold">Admin</h5>
+                            <h6 class="text-muted mb-0">@Keshavsoft_admin</h6>
                         </div>
                     </div>
                 </div>
