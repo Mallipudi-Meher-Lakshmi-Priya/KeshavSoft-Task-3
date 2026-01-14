@@ -10,11 +10,12 @@ import horizontalMenuItems from "./src/horizontal-menu-items.json"
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const root = resolve(__dirname, 'src')
+// FIX 1: Change root to __dirname so it finds index.html in the main folder
+const root = __dirname 
 
 const getFiles = () => {
     let files = {}
-
+    // We only look for html files in the main folder now
     fs.readdirSync(root)
         .filter(filename => filename.endsWith('.html'))
         .forEach(filename => {
@@ -30,7 +31,7 @@ const getVariables = (mode) => {
     Object.keys(files).forEach((filename) => {
         if (filename.includes('layouts')) filename = `layouts/${filename}`
         variables[filename + '.html'] = {
-            web_title: "Mazer Admin Dashboard",
+            web_title: "KeshavSoft Admin Dashboard",
             sidebarItems,
             horizontalMenuItems,
             isDev: mode === 'development'
@@ -39,11 +40,8 @@ const getVariables = (mode) => {
     return variables
 }
 
-// Modules and extensions
-// If the value is true, then it will copy the files inside the `dist` folders
-// But if the value is false, it will copy the entire module files and folders
 const modulesToCopy = {
-    "@icon/dripicons": false, // With dist folder = false
+    "@icon/dripicons": false,
     "@fortawesome/fontawesome-free": false,
     "rater-js": false,
     "bootstrap-icons": false,
@@ -85,36 +83,17 @@ const copyModules = Object.keys(modulesToCopy).map(moduleName => {
     }
 })
 
-build({
-    configFile: false,
-    build: {
-        emptyOutDir: false,
-        outDir: resolve(__dirname, 'dist/assets/compiled/js'),
-        lib: {
-            name: 'app',
-            formats: ['umd'],
-            fileName: 'app',
-            entry: './src/assets/js/app.js',
-        },
-        rollupOptions: {
-            output: {
-                entryFileNames: '[name].js'
-            }
-        }
-    },
-})
-
-
-
 export default defineConfig((env) => ({
     publicDir: 'static',
-    base: '/KeshavSoft-Task-3/',
+    // FIX 2: Change base to './' for Surge/Netlify compatibility
+    base: './', 
     root,
     plugins: [
         viteStaticCopy({
             targets: [
                 { src: normalizePath(resolve(__dirname, './src/assets/static')), dest: 'assets' },
-                { src: normalizePath(resolve(__dirname, './dist/assets/compiled/fonts')), dest: 'assets/compiled/css' },
+                // Use a safer path for fonts
+                { src: normalizePath(resolve(__dirname, './src/assets/compiled/fonts')), dest: 'assets/compiled/css', optional: true },
                 { src: normalizePath(resolve(__dirname, "./node_modules/bootstrap-icons/bootstrap-icons.svg")), dest: 'assets/static/images' },
                 ...copyModules
             ],
@@ -123,17 +102,17 @@ export default defineConfig((env) => ({
             }
         }),
         nunjucks({
-            templatesDir: root,
+            // FIX 3: Point templatesDir to where your components/layouts are (usually src)
+            templatesDir: resolve(__dirname, 'src'), 
             variables: getVariables(env.mode),
             nunjucksEnvironment: {
-
                 filters: {
                     containString: (str, containStr) => {
-                        if (!str.length) return false
+                        if (!str || !str.length) return false
                         return str.indexOf(containStr) >= 0
                     },
                     startsWith: (str, targetStr) => {
-                        if (!str.length) return false
+                        if (!str || !str.length) return false
                         return str.startsWith(targetStr)
                     }
                 }
@@ -149,9 +128,9 @@ export default defineConfig((env) => ({
             '~@fontsource': resolve(__dirname, 'node_modules/@fontsource'),
             '~@fortawesome': resolve(__dirname, 'node_modules/@fortawesome'), 
             '~rater-js': resolve(__dirname, 'node_modules/rater-js'), 
-    },
+    }},
     build: {
-        emptyOutDir: false,
+        emptyOutDir: true,
         manifest: true,
         target: "chrome58",
         outDir: resolve(__dirname, 'dist'),
@@ -160,18 +139,14 @@ export default defineConfig((env) => ({
             output: {
                 entryFileNames: `assets/compiled/js/[name].js`,
                 chunkFileNames: `assets/compiled/js/[name].js`,
-
                 assetFileNames: (a) => {
-                    const extname = a.name.split('.')[1]
+                    const extname = a.name.split('.').pop()
                     let folder = extname ? `${extname}/` : ''
-
-                    // Put fonts into css folder
                     if (['woff', 'woff2', 'ttf'].includes(extname))
                         folder = 'fonts/'
-
                     return `assets/compiled/${folder}[name][extname]`
                 }
             }
         }
     }
-}}))
+}))

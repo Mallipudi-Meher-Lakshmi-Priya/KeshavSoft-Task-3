@@ -11,4 +11,3 @@ dist.zip
 !.yarn/plugins
 .pnp.*
 dist/*
-template.zip
