@@ -108,7 +108,7 @@ build({
 
 export default defineConfig((env) => ({
     publicDir: 'static',
-    base: './',
+    base: '/KeshavSoft-Task-3/',
     root,
     plugins: [
         viteStaticCopy({
@@ -145,9 +145,10 @@ export default defineConfig((env) => ({
             '@': normalizePath(resolve(__dirname, 'src')),
             '~bootstrap': resolve(__dirname, 'node_modules/bootstrap'),
             '~bootstrap-icons': resolve(__dirname, 'node_modules/bootstrap-icons'),
-            '~perfect-scrollbar': resolve(__dirname, 'node_modules/perfect-scrollbar'),
+            '~perfect-scrollbar': resolve(__dirname, 'node_modules/perfect-scrollbar'), 
             '~@fontsource': resolve(__dirname, 'node_modules/@fontsource'),
-        }
+            '~@fortawesome': resolve(__dirname, 'node_modules/@fortawesome'), 
+            '~rater-js': resolve(__dirname, 'node_modules/rater-js'), 
     },
     build: {
         emptyOutDir: false,
@@ -171,6 +172,6 @@ export default defineConfig((env) => ({
                     return `assets/compiled/${folder}[name][extname]`
                 }
             }
-        },
+        }
     }
-}))
+}}))
